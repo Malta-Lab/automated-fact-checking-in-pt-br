@@ -1,35 +1,49 @@
-import os
 import json
+import re
 import requests
 from pathlib import Path
 from tqdm import tqdm
+from typing import Union
 
-# CONFIGURAÇÕES
-MODELS = ["deepseek-r1:8b", "qwen3:8b"]
+# CONFIG
+HOST = "http://localhost:11434/api/generate"
+MODELS = ["deepseek-r1:8b", "qwen3:8b", "gemma3:4b"]
 DATASET_DIR = "dataset"
 RESULTS_DIR = "results"
 
-
 def translate_text_ollama(model: str, prompt: str) -> str:
-    """
-    Usa a API do Ollama para traduzir texto do inglês para português.
-    """
     try:
         response = requests.post(
-            "http://localhost:11434/api/generate",
+            HOST,
             json={
                 "model": model,
-                "prompt": f"Traduza para português com linguagem natural e clara:\n{prompt}",
+                "prompt": f"Traduza para português. Apenas responda com a tradução, sem pensar, explicar ou comentar. Apenas a tradução:\n\"{prompt}\"\n\nTradução:",
                 "stream": False
             },
             timeout=120
         )
         response.raise_for_status()
-        return response.json().get("response", "").strip()
+        raw = response.json().get("response", "").strip()
+        return clean_translation(raw)
     except Exception as e:
         print(f"❌ Erro ao traduzir com o modelo '{model}': {e}")
         return ""
 
+def clean_translation(text: str) -> str:
+    # Remove blocos como <think>...</think> ou <internal>...</internal>
+    text = re.sub(r"<.*?>.*?</.*?>", "", text, flags=re.DOTALL)
+
+    # Pega apenas a última parte (geralmente a tradução), removendo preâmbulos
+    text = re.split(r"(?:[Tt]radu[cç][aã]o\s*[:\-–]?\s*|\n{2,})", text)[-1]
+
+    # Remove aspas duplicadas ao redor, se presentes
+    text = text.strip()
+    if text.startswith('"') and text.endswith('"'):
+        text = text[1:-1].strip()
+    elif text.startswith('“') and text.endswith('”'):
+        text = text[1:-1].strip()
+
+    return text
 
 def warmup_model(model: str) -> bool:
     """
@@ -52,14 +66,15 @@ def warmup_model(model: str) -> bool:
     except Exception as e:
         print(f"❌ Erro ao iniciar o modelo '{model}': {e}")
         return False
-
-
+    
+    
 def process_file(file_path: Path, model: str):
     with open(file_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
 
     translated_data = []
-    for item in tqdm(data, desc=f"Traduzindo {file_path.name}", unit="item"):
+    for item in tqdm(data, desc=f"Traduzindo {file_path.name} (1 primeira claims)", unit="item"):
+    #for item in tqdm(data[:1], desc=f"Traduzindo {file_path.name} (1 primeira claims)", unit="item"):
         if 'claim' in item and item['claim']:
             item['claim'] = translate_text_ollama(model, item['claim'])
 
@@ -74,11 +89,21 @@ def process_file(file_path: Path, model: str):
                     for ans in question_obj['answers']:
                         if 'answer' in ans and ans['answer']:
                             ans['answer'] = translate_text_ollama(model, ans['answer'])
+                        if 'boolean_explanation' in ans and ans['boolean_explanation']:
+                            ans['boolean_explanation'] = translate_text_ollama(model, ans['boolean_explanation'])
 
         translated_data.append(item)
-
     return translated_data
 
+def translate_recursive(obj: Union[dict, list, str], model: str) -> Union[dict, list, str]:
+    if isinstance(obj, dict):
+        return {key: translate_recursive(value, model) for key, value in obj.items()}
+    elif isinstance(obj, list):
+        return [translate_recursive(item, model) for item in obj]
+    elif isinstance(obj, str):
+        return translate_text_ollama(model, obj)
+    else:
+        return obj
 
 def main():
     for model in MODELS:
@@ -98,7 +123,6 @@ def main():
             with open(output_file, "w", encoding="utf-8") as f:
                 json.dump(translated_data, f, ensure_ascii=False, indent=2)
             print(f"✅ Tradução salva em: {output_file}\n")
-
 
 if __name__ == "__main__":
     main()
