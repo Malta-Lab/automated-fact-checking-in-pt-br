@@ -5,12 +5,13 @@ from pathlib import Path
 from tqdm import tqdm
 from typing import Union
 
-# CONFIG
+# === CONFIGURAÇÕES ===
 HOST = "http://localhost:11434/api/generate"
-MODELS = ["deepseek-r1:8b", "qwen3:8b", "gemma3:4b"]
+MODELS = ["gemma3:4b"]
 DATASET_DIR = "dataset"
 RESULTS_DIR = "results"
 
+# === TRADUÇÃO COM OLLAMA ===
 def translate_text_ollama(model: str, prompt: str) -> str:
     try:
         response = requests.post(
@@ -30,29 +31,18 @@ def translate_text_ollama(model: str, prompt: str) -> str:
         return ""
 
 def clean_translation(text: str) -> str:
-    # Remove blocos como <think>...</think> ou <internal>...</internal>
     text = re.sub(r"<.*?>.*?</.*?>", "", text, flags=re.DOTALL)
-
-    # Pega apenas a última parte (geralmente a tradução), removendo preâmbulos
     text = re.split(r"(?:[Tt]radu[cç][aã]o\s*[:\-–]?\s*|\n{2,})", text)[-1]
-
-    # Remove aspas duplicadas ao redor, se presentes
     text = text.strip()
-    if text.startswith('"') and text.endswith('"'):
+    if text.startswith('"') and text.endswith('"') or text.startswith('“') and text.endswith('”'):
         text = text[1:-1].strip()
-    elif text.startswith('“') and text.endswith('”'):
-        text = text[1:-1].strip()
-
     return text
 
 def warmup_model(model: str) -> bool:
-    """
-    Inicializa o modelo no Ollama com uma chamada de teste.
-    """
     print(f"\n🚀 Inicializando modelo '{model}'...")
     try:
         response = requests.post(
-            "http://localhost:11434/api/generate",
+            HOST,
             json={
                 "model": model,
                 "prompt": "Diga apenas 'ok'.",
@@ -66,45 +56,77 @@ def warmup_model(model: str) -> bool:
     except Exception as e:
         print(f"❌ Erro ao iniciar o modelo '{model}': {e}")
         return False
-    
-    
-def process_file(file_path: Path, model: str):
-    with open(file_path, 'r', encoding='utf-8') as f:
-        data = json.load(f)
+
+# === PROCESSAMENTO DE ARQUIVO ===
+def process_file(file_path: Path, model: str, output_file: Path, errors_file: Path, cache_file: Path):
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+    except Exception as e:
+        print(f"❌ Erro ao carregar {file_path}: {e}")
+        return
 
     translated_data = []
-    for item in tqdm(data, desc=f"Traduzindo {file_path.name} (1 primeira claims)", unit="item"):
-    #for item in tqdm(data[:1], desc=f"Traduzindo {file_path.name} (1 primeira claims)", unit="item"):
-        if 'claim' in item and item['claim']:
-            item['claim'] = translate_text_ollama(model, item['claim'])
+    if output_file.exists():
+        with open(output_file, 'r', encoding='utf-8') as f:
+            translated_data = json.load(f)
 
-        if 'justification' in item and item['justification']:
-            item['justification'] = translate_text_ollama(model, item['justification'])
+    translations_cache = {}
+    if cache_file.exists():
+        with open(cache_file, 'r', encoding='utf-8') as f:
+            translations_cache = json.load(f)
 
-        if 'questions' in item:
-            for question_obj in item['questions']:
-                if 'question' in question_obj and question_obj['question']:
-                    question_obj['question'] = translate_text_ollama(model, question_obj['question'])
-                if 'answers' in question_obj:
-                    for ans in question_obj['answers']:
-                        if 'answer' in ans and ans['answer']:
-                            ans['answer'] = translate_text_ollama(model, ans['answer'])
-                        if 'boolean_explanation' in ans and ans['boolean_explanation']:
-                            ans['boolean_explanation'] = translate_text_ollama(model, ans['boolean_explanation'])
+    errors = []
+    if errors_file.exists():
+        with open(errors_file, 'r', encoding='utf-8') as f:
+            errors = json.load(f)
 
-        translated_data.append(item)
-    return translated_data
+    def cached_translate(text: str) -> str:
+        if not text.strip():
+            return text
+        if text in translations_cache:
+            return translations_cache[text]
+        translated = translate_text_ollama(model, text)
+        if translated:
+            translations_cache[text] = translated
+        return translated
 
-def translate_recursive(obj: Union[dict, list, str], model: str) -> Union[dict, list, str]:
-    if isinstance(obj, dict):
-        return {key: translate_recursive(value, model) for key, value in obj.items()}
-    elif isinstance(obj, list):
-        return [translate_recursive(item, model) for item in obj]
-    elif isinstance(obj, str):
-        return translate_text_ollama(model, obj)
-    else:
-        return obj
+    start_idx = len(translated_data)
+    for idx in tqdm(range(start_idx, len(data)), desc=f"Traduzindo {file_path.name}"):
+        item = data[idx]
+        try:
+            if 'claim' in item and item['claim']:
+                item['claim'] = cached_translate(item['claim'])
 
+            if 'justification' in item and item['justification']:
+                item['justification'] = cached_translate(item['justification'])
+
+            if 'questions' in item:
+                for question_obj in item['questions']:
+                    if 'question' in question_obj and question_obj['question']:
+                        question_obj['question'] = cached_translate(question_obj['question'])
+                    if 'answers' in question_obj:
+                        for ans in question_obj['answers']:
+                            if 'answer' in ans and ans['answer']:
+                                ans['answer'] = cached_translate(ans['answer'])
+                            if 'boolean_explanation' in ans and ans['boolean_explanation']:
+                                ans['boolean_explanation'] = cached_translate(ans['boolean_explanation'])
+
+            translated_data.append(item)
+
+            # Salva progresso parcial
+            with open(output_file, 'w', encoding='utf-8') as f:
+                json.dump(translated_data, f, ensure_ascii=False, indent=2)
+            with open(cache_file, 'w', encoding='utf-8') as f:
+                json.dump(translations_cache, f, ensure_ascii=False, indent=2)
+
+        except Exception as e:
+            print(f"❌ Erro ao traduzir item {idx}: {e}")
+            errors.append({'index': idx, 'item': item, 'error': str(e)})
+            with open(errors_file, 'w', encoding='utf-8') as f:
+                json.dump(errors, f, ensure_ascii=False, indent=2)
+
+# === EXECUÇÃO PRINCIPAL ===
 def main():
     for model in MODELS:
         if not warmup_model(model):
@@ -118,10 +140,10 @@ def main():
         print(f"🔁 Iniciando traduções com modelo: {model_dirname}\n")
         for dataset_file in Path(DATASET_DIR).glob("*.json"):
             print(f"📂 Processando arquivo: {dataset_file.name}")
-            translated_data = process_file(dataset_file, model)
             output_file = output_dir / dataset_file.name
-            with open(output_file, "w", encoding="utf-8") as f:
-                json.dump(translated_data, f, ensure_ascii=False, indent=2)
+            errors_file = output_dir / (dataset_file.stem + "_errors.json")
+            cache_file = output_dir / (dataset_file.stem + "_cache.json")
+            process_file(dataset_file, model, output_file, errors_file, cache_file)
             print(f"✅ Tradução salva em: {output_file}\n")
 
 if __name__ == "__main__":
