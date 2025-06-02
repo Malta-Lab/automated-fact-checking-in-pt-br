@@ -7,7 +7,7 @@ from typing import Union
 
 # CONFIG
 HOST = "http://localhost:11434/api/generate"
-MODELS = ["gemma3:4b"]  # Adicione outros modelos se quiser
+MODELS = ["gemma3:4b", "qwen3:8b", "deepseek-r1:8b"]
 DATASET_DIR = "dataset"
 RESULTS_DIR = "results"
 
