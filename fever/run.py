@@ -80,14 +80,23 @@ def process_jsonl(file_path: Path, model: str, output_file: Path, errors_file: P
 
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
-    # Conta o número total de linhas do arquivo
+    # Conta o número total de linhas do arquivo original
     with open(file_path, 'r', encoding='utf-8') as f:
         total_lines = sum(1 for _ in f)
+
+    # Conta quantas já foram processadas
+    processed_lines = 0
+    if output_file.exists():
+        with open(output_file, 'r', encoding='utf-8') as f_out:
+            processed_lines = sum(1 for _ in f_out)
 
     with open(file_path, 'r', encoding='utf-8') as fin, \
          open(output_file, 'a', encoding='utf-8') as fout:
 
         for idx, line in enumerate(tqdm(fin, total=total_lines, desc=f"Traduzindo {file_path.name}")):
+            if idx < processed_lines:
+                continue  # Pula linhas já processadas
+
             try:
                 item = json.loads(line)
                 claim = item.get("claim", "")
