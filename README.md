@@ -123,7 +123,7 @@ This project is licensed under the MIT License.
 ## ✨ Acknowledgements
 
 - [LIAR Dataset](https://www.cs.ucsb.edu/~william/data/liar_dataset.zip)
-- [Averitec Dataset](https://github.com/averitec/averitec-dataset)
+- [Averitec Dataset](https://fever.ai/dataset/averitec.html)
 - [Ollama](https://ollama.com/)
 - OpenAI, Google, and the open-source LLM community
 
