@@ -1,6 +1,6 @@
-# Dataset Translator & Fact-Checking Automation
+# Fact-Checking & Dataset Translator Automation
 
-Welcome to the **Dataset Translator & Fact-Checking Automation** project!  
+Welcome to the **Fact-Checking & Dataset Translator Automation** project!  
 This repository provides scripts and workflows for translating fact-checking datasets and automating claim classification using large language models (LLMs).
 
 **What this project does:**  
