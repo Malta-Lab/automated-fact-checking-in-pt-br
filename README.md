@@ -4,7 +4,7 @@ Welcome to the **Dataset Translator & Fact-Checking Automation** project!
 This repository provides scripts and workflows for translating fact-checking datasets and automating claim classification using large language models (LLMs).
 
 **What this project does:**  
-- Translates the original [LIAR](https://www.cs.ucsb.edu/~william/data/liar_dataset.zip) and [Averitec](https://github.com/averitec/averitec-dataset) datasets to Portuguese using LLMs.
+- Translates the original [LIAR](https://www.cs.ucsb.edu/~william/data/liar_dataset.zip) and [Averitec](https://fever.ai/dataset/averitec.html) datasets to Portuguese using LLMs.
 - Runs Zero-Shot and Few-Shot classification experiments on both the original English datasets and their Portuguese translations.
 
 ---
@@ -113,12 +113,6 @@ Or open the Jupyter notebooks for interactive analysis.
 
 ---
 
-## 🤝 Contributing
-
-Pull requests are welcome!  
-Feel free to open issues or suggest improvements.
-
----
 
 ## 📜 License
 
