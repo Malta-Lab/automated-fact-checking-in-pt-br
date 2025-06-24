@@ -1,8 +1,0 @@
-tqdm
-scikit-learn
-requests
-jupyter
-pandas
-numpy
-matplotlib
-seaborn
