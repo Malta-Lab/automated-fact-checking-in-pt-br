@@ -43,6 +43,16 @@ The project is organized into three main directories:
 
   * **`requirements.txt`**: Lists Python dependencies required to run the project.
 
+## Datasets
+
+This project utilizes the following fact-checking datasets:
+
+  * **[LIAR Dataset](https://www.cs.ucsb.edu/~william/data/liar_dataset.zip)**: A publicly available dataset for fake news detection, consisting of 12.8K manually fact-checked short statements from PolitiFact.com. Each statement is accompanied by meta-information and a label indicating its veracity.
+
+
+  * **[Averitec Dataset](https://fever.ai/dataset/averitec.html)**: A dataset used for evidence-based fact-checking, typically involving claims that require external evidence for verification.
+
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
