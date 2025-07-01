@@ -1,0 +1,17 @@
+{
+    "model_name": "bert-base-multilingual-cased",
+    "train_path": "/mnt/C-SSD/desinformacao/luquinhas/liar/dataset/train.jsonl",
+    "dev_path": "/mnt/C-SSD/desinformacao/luquinhas/liar/dataset/valid.jsonl",
+    "test_path": "/mnt/C-SSD/desinformacao/luquinhas/liar/dataset/test.jsonl", 
+    "num_epochs": 1000,
+    "learning_rate": 6.74e-4,
+    "batch_size": 4096,
+    "early_stopping_patience": 20,
+    "freeze":true,
+    "two_layer_heads":false,
+    "class_weights":true,
+    "experiment_name": "freeze_mBERT_cased_ENG_LIAR_no_answer_gold",
+    "gpu_device": "0",
+    "binary": false,
+    "answer": false
+}

@@ -1,0 +1,30 @@
+{
+    "model_name": "bert-base-multilingual-cased",
+    "train_path": "/mnt/C-SSD/desinformacao/datasets/averitec/gemma3-4b/train.json",
+    "dev_path": "/mnt/C-SSD/desinformacao/datasets/averitec/gemma3-4b/dev.json", 
+    "num_epochs": 2000,
+    "learning_rate": 2e-7,
+    "batch_size": 512,
+    "early_stopping_patience": 200,
+    "freeze":true,
+    "two_layer_heads":false,
+    "class_weights":true,
+    "experiment_name": "mBERT_cased_PTBR_averitec_LR_2e-7_2kepochs",
+    "gpu_device": "5",
+    "binary": false,
+    "answer": false
+}
+
+
+    train_path = config["train_path"]
+    dev_path   = config["dev_path"]
+    test_path  = config.get("test_path", None)
+    answer     = config.get("answer", False)
+    binary     = config.get("binary", False)
+    language   = 'pt' if 'results' in train_path else 'en'
+    batch_size = config.get("batch_size", 16)
+    max_length = config.get("max_length", 128)
+    gpu_id = config.get("gpu_device", None)
+
+# Example command to run the test script with the provided configuration and model checkpoint
+    python test.py configs/liar_example.json runs/mBERT_cased_PTBR_LIAR_answer_LR_2e-5_1kepochs/checkpoints/best_bert-base-multilingual-cased_lr2e-05.bin

@@ -1,0 +1,16 @@
+{
+    "model_name": "bert-base-multilingual-cased",
+    "train_path": "/mnt/C-SSD/desinformacao/luquinhas/averitec/dataset/train.json",
+    "dev_path": "/mnt/C-SSD/desinformacao/luquinhas/averitec/dataset/dev.json", 
+    "num_epochs": 2000,
+    "learning_rate": 2e-5,
+    "batch_size": 256,
+    "early_stopping_patience": 20,
+    "freeze":false,
+    "two_layer_heads":false,
+    "class_weights":true,
+    "experiment_name": "mBERT_cased_ENG_averitec_no_answer_LR_2e-5_2kepochs",
+    "gpu_device": "5",
+    "binary": false,
+    "answer": false
+}

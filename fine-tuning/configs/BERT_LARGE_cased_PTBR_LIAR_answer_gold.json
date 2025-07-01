@@ -1,0 +1,17 @@
+{
+    "model_name": "google-bert/bert-large-cased",
+    "train_path": "/mnt/C-SSD/desinformacao/luquinhas/liar/pt-br/dataset/gemma3-4b/train.jsonl",
+    "dev_path": "/mnt/C-SSD/desinformacao/luquinhas/liar/pt-br/dataset/gemma3-4b/valid.jsonl",
+    "test_path": "/mnt/C-SSD/desinformacao/luquinhas/liar/pt-br/dataset/gemma3-4b/test.jsonl", 
+    "num_epochs": 1000,
+    "learning_rate": 4.24e-05,
+    "batch_size": 128,
+    "early_stopping_patience": 20,
+    "freeze":false,
+    "two_layer_heads":false,
+    "class_weights":true,
+    "experiment_name": "BERT_LARGE_cased_PTBR_LIAR_answer_gold",
+    "gpu_device": "0",
+    "binary": false,
+    "answer": true
+}

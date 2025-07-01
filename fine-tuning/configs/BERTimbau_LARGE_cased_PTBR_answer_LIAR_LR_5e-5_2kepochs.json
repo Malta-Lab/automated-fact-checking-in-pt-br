@@ -1,0 +1,16 @@
+{
+    "model_name": "neuralmind/bert-large-portuguese-cased",
+    "train_path": "/mnt/C-SSD/desinformacao/luquinhas/liar/results/gemma3-4b/train.jsonl",
+    "dev_path": "/mnt/C-SSD/desinformacao/datasets/averitec/gemma3-4b/dev.json", 
+    "num_epochs": 2000,
+    "learning_rate": 5e-5,
+    "batch_size": 64,
+    "early_stopping_patience": 20,
+    "freeze":false,
+    "two_layer_heads":false,
+    "class_weights":true,
+    "experiment_name": "BERTimbau_LARGE_PTBR_answer_averitec_LR_5e-5_2kepochs",
+    "gpu_device": "0",
+    "binary": false,
+    "answer": true
+}

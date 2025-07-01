@@ -1,0 +1,17 @@
+{
+    "model_name": "google-bert/bert-large-cased",
+    "train_path": "/mnt/C-SSD/desinformacao/luquinhas/liar/pt-br/dataset/train.jsonl",
+    "dev_path": "/mnt/C-SSD/desinformacao/luquinhas/liar/pt-br/dataset/valid.jsonl",
+    "test_path": "/mnt/C-SSD/desinformacao/luquinhas/liar/pt-br/dataset/test.jsonl", 
+    "num_epochs": 1000,
+    "learning_rate": 2e-5,
+    "batch_size": 128,
+    "early_stopping_patience": 20,
+    "freeze":false,
+    "two_layer_heads":false,
+    "class_weights":true,
+    "experiment_name": "BERT_LARGE_cased_PTBR_LIAR_answer_LR_2e-5_1kepochs",
+    "gpu_device": "2",
+    "binary": false,
+    "answer": true
+}

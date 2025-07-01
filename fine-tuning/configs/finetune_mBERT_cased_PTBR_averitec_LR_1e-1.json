@@ -1,0 +1,12 @@
+{
+    "model_name": "bert-base-multilingual-cased",
+    "train_path": "/mnt/C-SSD/desinformacao/datasets/averitec/gemma3-4b/train.json",
+    "dev_path": "/mnt/C-SSD/desinformacao/datasets/averitec/gemma3-4b/dev.json", 
+    "num_epochs": 500,
+    "learning_rate": 1e-1,
+    "batch_size": 512,
+    "freeze":true,
+    "class_weights":true,
+    "experiment_name": "finetune_mBERT_cased_PTBR_averitec_LR_1e-1",
+    "gpu_device": "4"
+}

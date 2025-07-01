@@ -1,0 +1,17 @@
+{
+    "model_name": "bert-base-multilingual-cased",
+    "train_path": "/mnt/C-SSD/desinformacao/luquinhas/liar/results/gemma3-4b/train.jsonl",
+    "dev_path": "/mnt/C-SSD/desinformacao/luquinhas/liar/results/gemma3-4b/valid.jsonl",
+    "test_path": "/mnt/C-SSD/desinformacao/luquinhas/liar/results/gemma3-4b/test.jsonl", 
+    "num_epochs": 3,
+    "learning_rate": 2e-7,
+    "batch_size": 128,
+    "early_stopping_patience": 200,
+    "freeze":false,
+    "two_layer_heads":false,
+    "class_weights":true,
+    "experiment_name": "mBERT_cased_PTBR_averitec_LR_2e-7_2kepochs",
+    "gpu_device": "5",
+    "binary": false,
+    "answer": false
+}
