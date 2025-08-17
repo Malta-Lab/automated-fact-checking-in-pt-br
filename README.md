@@ -1,4 +1,4 @@
-# Fact-Checking Dataset Translator and Fine-tuning Project
+# Automated Fact-Checking in PT-BR
 
 This project focuses on fact-checking using various language models, particularly for English and Brazilian Portuguese (PT-BRr) datasets. It includes scripts for zero-shot and few-shot inference, dataset translation, model fine-tuning, and result analysis.
 
@@ -187,3 +187,4 @@ jupyter notebook
 ```
 
 Then navigate to the respective `.ipynb` file.
+
