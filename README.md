@@ -1,6 +1,6 @@
 # Automated Fact-Checking in PT-BR
 
-This project focuses on fact-checking using various language models, particularly for English and Brazilian Portuguese (PT-BRr) datasets. It includes scripts for zero-shot and few-shot inference, dataset translation, model fine-tuning, and result analysis.
+This project focuses on fact-checking using various language models, particularly for English and Brazilian Portuguese (PT-BR) datasets. It includes scripts for zero-shot and few-shot inference, dataset translation, model fine-tuning, and result analysis.
 
 ## Project Structure
 
@@ -66,8 +66,8 @@ You need Python 3.8+ installed. It is recommended to use a virtual environment.
 1.  **Clone the repository (if not already done):**
 
     ```bash
-    git clone https://github.com/lucasfrag/fact-checking-dataset-translator
-    cd fact-checking-dataset-translator
+    git clone https://github.com/lucasfrag/automated-fact-checking-in-pt-br
+    cd automated-fact-checking-in-pt-br
     ```
 
 2.  **Create and activate a virtual environment:**
@@ -187,4 +187,5 @@ jupyter notebook
 ```
 
 Then navigate to the respective `.ipynb` file.
+
 
