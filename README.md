@@ -2,7 +2,25 @@
 
 This project focuses on fact-checking using various language models, particularly for English and Brazilian Portuguese (PT-BR) datasets. It includes scripts for zero-shot and few-shot inference, dataset translation, model fine-tuning, and result analysis.
 
-## Project Structure
+## 🧩 Citation
+If you use this repository in your research, please cite it as follows:
+
+- BibTeX:
+```
+@inproceedings{stil,
+ author = {Marcelo Delucis and Lucas Fraga and Otávio Parraga and Christian Mattjie and Rafaela Ravazio and Rodrigo Barros and Lucas Kupssinskü},
+ title = { Automated Fact-Checking in Brazilian Portuguese: Resources and Baselines},
+ booktitle = {Anais do XVI Simpósio Brasileiro de Tecnologia da Informação e da Linguagem Humana},
+ location = {Fortaleza/CE},
+ year = {2025},
+ pages = {137--148},
+ publisher = {SBC},
+ address = {Porto Alegre, RS, Brasil},
+ url = {https://sol.sbc.org.br/index.php/stil/article/view/37820}
+}
+```
+
+## 📁 Project Structure
 
 The project is organized into three main directories:
 
@@ -43,7 +61,7 @@ The project is organized into three main directories:
 
   * **`requirements.txt`**: Lists Python dependencies required to run the project.
 
-## Datasets
+## 🧠 Datasets
 
 This project utilizes the following fact-checking datasets:
 
@@ -53,7 +71,7 @@ This project utilizes the following fact-checking datasets:
   * **[Averitec Dataset](https://fever.ai/dataset/averitec.html)**: A dataset used for evidence-based fact-checking, typically involving claims that require external evidence for verification.
 
 
-## Getting Started
+## ⚙️ Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
@@ -102,7 +120,7 @@ This project uses `ollama` for running language models locally. You need to inst
 
     Ensure your Ollama server is running before executing the project scripts.
 
-## Usage
+## 🚀 Usage
 
 ### Running Inference (Zero-Shot and Few-Shot)
 
@@ -171,7 +189,7 @@ python translate.py
 
 This script will translate specified datasets using the configured Ollama model.
 
-## Analysis and Results
+## 📊 Analysis and Results
 
 Jupyter notebooks located in `averitec/english/results_overview.ipynb`, `averitec/pt-br/results_overview.ipynb` and `liar/english/results_overview.ipynb`, `liar/pt-br/results_overview.ipynb` and `fine-tuning/results.ipynb` provide detailed analyses and visualizations of the experimental results. You can open these notebooks to explore:
 
@@ -187,5 +205,6 @@ jupyter notebook
 ```
 
 Then navigate to the respective `.ipynb` file.
+
 
 
